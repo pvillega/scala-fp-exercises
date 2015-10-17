@@ -106,6 +106,16 @@ sealed trait Stream[+A] {
     }
     tailStreams append Stream(Empty)
   }
+
+  //Copied from answers due to it being needed in chapter 8
+  def zip[B](s2: Stream[B]): Stream[(A,B)] =
+    zipWith(s2)((_,_))
+
+  @annotation.tailrec
+  final def find(f: A => Boolean): Option[A] = this match {
+    case Empty => None
+    case Cons(h, t) => if (f(h())) Some(h()) else t().find(f)
+  }
 }
 
 case object Empty extends Stream[Nothing]
